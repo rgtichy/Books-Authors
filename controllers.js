@@ -3,13 +3,13 @@ var { Book, Author } = require('./models');
 var AuthorsController = {
     create: function(req,res){
     // console.log(req.body);
-    Author.create(req.body)
-        .then(function(newAuthor){
-            res.json(newAuthor);
-        })
-        .catch(function(error){
-            res.status(500);
-            res.json(error);
+        Author.create(req.body)
+            .then(function(newAuthor){
+                res.json(newAuthor);
+            })
+            .catch(function(error){
+                res.status(500);
+                res.json(error);
         });
     },
     index: function(req,res){
@@ -18,7 +18,19 @@ var AuthorsController = {
             .exec()
             .then(function(authors){
                 res.json(authors);
+            })
+            .catch(function(err){
+                res.status(500).json(err);
+            });
+    },
+    update: function(req, res){
+        Author.update({ _id: req.params.id }, req.body)
+        .then(function(){
+            res.json({success: true});
         })
+        .catch(function(err){
+            res.status(500).json(err);
+        });
     }
 }
 
@@ -43,6 +55,8 @@ var BooksController = {
         });
     }
 }
+
+
 module.exports = {
     AuthorsController,
     BooksController
