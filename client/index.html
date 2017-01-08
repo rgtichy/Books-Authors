@@ -14,13 +14,15 @@
         <div class='row'>
           <h1 class='col-md-8'>Authors/Books!</h1>
         </div>
-        <div id='addBook' style='display:none;' class='row'>
-          <form>
+        <div id='addBookDiv' style='display:none;'>
+          <form id='addBook' action='/books'>
             <div class='form-group'>
-              <label class='col-md-1'>Title</label><input class='col-md-4' placeholder='Book Title' type='text' name='title'/>
-              <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
-              <label class='col-md-1'>Publisher</label><input class='col-md-3' placeholder='Publisher' type='text' name='pub'/>
-              <input class='btn btn-success' type='submit' value='Add Book'/>
+              <div class='row'>
+                <label class='col-md-1'>Title</label><input class='col-md-3' placeholder='Book Title' type='text' name='title'/>
+                <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
+                <label class='col-md-1'>Publisher</label><input class='col-md-3' placeholder='Publisher' type='text' name='pub'/>
+                <button class='col-md-1 btn btn-success' type='submit'>Add Book</button>
+              </div>
             </div>
           </form>
         </div>

@@ -1,5 +1,42 @@
-function addBook(form){
-  console.log(form)
+function resetFormAddBook(){
+  $('#addBookDiv').find('span').remove('.author');
+  $('#addBookDiv').find('input').remove('.author');
+  clearForm('#addBookDiv');
+}
+function clearForm(selector){
+  $(selector).find('input').val("");
+  $(selector).find('textarea').val("");
+}
+function displayAddBook(button){
+  console.log(button)
+
+  resetFormAddBook();
+
+  $('#addBookDiv').children('form').prepend(`<span class='author' data='${$(this).attr('data')}'><b>Author:</b> ${$(this).attr('data2')}</span>`);
+  $('#addBookDiv').children('form').prepend(`<input class='author' name='authorId' type='hidden' value='${$(this).attr('data')}'/>`);
+  $('#addBookDiv').css('display', 'none');
+  $('#addBookDiv').toggle();
+}
+function addBook(event){
+  event.preventDefault();
+  console.log($(this))
+  var dataObject={
+    title: $('input[name="title"]').val(),
+    publishDate: $('input[name="year"]').val(),
+    publisher: $('input[name="pub"]').val(),
+    author: $('input[name="authorId"]').val()
+  }
+  $.ajax({url: '/books',
+          method: 'POST',
+          data: dataObject,
+          success: function(data){
+            resetFormAddBook();
+            $('#addBookDiv').css('display', 'none');
+            indexAuthorsBooks();},
+        })
+        .fail(function(data){
+          console.log("Fail?!",data)
+  });
 }
 function indexAuthorsBooks(){
   function writeAuthor(authorObj){
@@ -9,7 +46,7 @@ function indexAuthorsBooks(){
                       Edit
                     </button>
                       ${authorObj.lastName}, ${authorObj.firstName}`;
-    htmlString += `<button formaction="/authors/${authorObj._id}/addBook" class='btnA btn btn-xs btn-primary'>
+    htmlString += `<button formaction="/authors/${authorObj._id}/addBook" class='btnA btn btn-xs btn-primary' data='${authorObj._id}' data2='${authorObj.lastName}, ${authorObj.firstName}'>
                     Add Book
                   </button>`;
     if (authorObj.books.length > 0){
@@ -65,7 +102,7 @@ function remove(event){
         })
         .fail(function(dta){
           console.log("Fail?!",dta)
-        });
+  });
 }
 function addAuthor(event){
 
@@ -77,14 +114,18 @@ function addAuthor(event){
   $.ajax({url: '/authors',
           method: 'POST',
           data: dataObject,
-          success: indexAuthorsBooks,
+          success: function(){
+            clearForm('#addAuthor')
+            indexAuthorsBooks();
+          },
   });
 }
 $(document).ready(function(){
     console.log('jQuery running');
-    $('#addBook').on('submit',this, addBook);
+    $('#addBook').on('submit', addBook);
     $('#addAuthor').submit(addAuthor);
     $('#ab').on('click','.btnD', remove);
+    $('#ab').on('click','.btnA', displayAddBook);
     $('#ab').on('mouseenter mouseleave','li',function(){
       $(this).children('.btnD').toggle();
     });

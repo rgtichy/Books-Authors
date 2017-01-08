@@ -6,14 +6,16 @@ mongoose.connection.on('connected', function(){
 });
 
 var bookSchema = mongoose.Schema({
-    title: String,
+    title: { type: String, require: true },
     publishDate: Date,
+    publisher: { type: String, require: false },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' }
 });
 
 var authorSchema = mongoose.Schema({
     firstName: { type: String, require: true },
-    lastName: String,
+    lastName: { type: String, require: true },
+    birthDate: Date,
     books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
 });
 
