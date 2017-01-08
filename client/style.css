@@ -1,0 +1,8 @@
+.btnD,.btnE, .btnA, #editA {
+  display: none;
+}
+#ab {
+  height: 40rem;
+  width: 80%;
+}
+button {margin-left: .5rem;}

@@ -2,7 +2,10 @@ var { Book, Author } = require('./models');
 
 var AuthorsController = {
     create: function(req,res){
+      console.log("req.body:",req.body)
     // console.log(req.body);
+      if (req.body.lastName){
+        console.log("lastName=",req.body.lastName)
         Author.create(req.body)
             .then(function(newAuthor){
                 res.json(newAuthor);
@@ -11,6 +14,7 @@ var AuthorsController = {
                 res.status(500);
                 res.json(error);
         });
+      }
     },
     index: function(req,res){
         Author.find({})
@@ -31,6 +35,9 @@ var AuthorsController = {
         .catch(function(err){
             res.status(500).json(err);
         });
+    },
+    delete: function(req, req){
+      console.log("delete request received")
     }
 }
 

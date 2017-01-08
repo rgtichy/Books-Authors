@@ -4,13 +4,43 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" rel="stylesheet" />
         <script src='https://code.jquery.com/jquery-3.1.1.js' integrity='sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=' crossorigin='anonymous'></script>
         <script src='main.js'></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <h1>Authors/Books!</h1>
-        <ul>
-            
-        </ul>
+      <div class='container'>
+        <div class='row'>
+          <h1 class='col-md-8'>Authors/Books!</h1>
+        </div>
+        <div id='addBook' style='display:none;' class='row'>
+          <form>
+            <div class='form-group'>
+              <label class='col-md-1'>Title</label><input class='col-md-4' placeholder='Book Title' type='text' name='title'/>
+              <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
+              <label class='col-md-1'>Publisher</label><input class='col-md-3' placeholder='Publisher' type='text' name='pub'/>
+              <input class='btn btn-success' type='submit' value='Add Book'/>
+            </div>
+          </form>
+        </div>
+        <div id='ab'>
+          <ul data='authors'>
+
+          </ul>
+        </div>
+        <div class='row'>
+          <form id='addAuthor' action='/authors' method='POST'>
+            <div class='form-group'>
+              <hr />
+              <label class='text-right col-md-2'>First Name:</label><input name='firstName' placeholder='William' class='col-md-2' type='text'/>
+              <label class='text-right col-md-2'>Last Name:</label><input name='lastName' placeholder='Shakespeare' class='col-md-2' type='text'/>
+              <label class='text-right col-md-1'>Birth:</label><input name='birth' placeholder='Year' class='col-md-1' type='number'/>
+              <button id='addA' type='submit' class='btn btn-primary col-md-1'>Add Author</button>
+              <button id='editA' type='submit' class='btn btn-primary col-md-1'>Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </body>
 </html>
