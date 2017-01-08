@@ -5,22 +5,22 @@ function indexAuthorsBooks(){
   function writeAuthor(authorObj){
     var htmlString='';
     htmlString += `<li>
-                    <button formaction="/authors/${authorObj._id}/show" data='${authorObj._id}' class='btnE btn btn-xs btn-primary'>
+                    <button formaction="/authors/${authorObj._id}/show" class='btnE btn btn-xs btn-primary'>
                       Edit
                     </button>
                       ${authorObj.lastName}, ${authorObj.firstName}`;
-    htmlString += `<button formaction="/authors/${authorObj._id}/addBook" data='${authorObj._id}' class='btnA btn btn-xs btn-primary'>
+    htmlString += `<button formaction="/authors/${authorObj._id}/addBook" class='btnA btn btn-xs btn-primary'>
                     Add Book
                   </button>`;
     if (authorObj.books.length > 0){
         htmlString += "<ul data='books'>";
         authorObj.books.forEach(function(bookObj){
             htmlString += `<li>
-                              <button formaction="/books/${bookObj._id}/show" data='${bookObj._id}' class='btnE btn btn-xs btn-primary'>
+                              <button formaction="/books/${bookObj._id}/show" class='btnE btn btn-xs btn-primary'>
                                 Edit
                               </button>
                               ${bookObj.title}
-                              <button formaction="/books/${bookObj._id}/destroy" data='${bookObj._id}' class='btnD btn btn-xs btn-danger'>
+                              <button formaction="/books/${bookObj._id}/destroy" class='btnD btn btn-xs btn-danger'>
                                 Remove
                               </button>
                            </li>`
@@ -28,7 +28,7 @@ function indexAuthorsBooks(){
         htmlString += "</ul>";
     } //books.length>0
     else{
-      htmlString += `<button formaction='/authors/${authorObj._id}/destroy' data='${authorObj._id}' class='btnD btn btn-xs btn-danger'>
+      htmlString += `<button formaction='/authors/${authorObj._id}/destroy' class='btnD btn btn-xs btn-danger'>
                        Remove
                      </button>`;
     }
@@ -37,19 +37,15 @@ function indexAuthorsBooks(){
   }
   console.log("re-fill authors/books")
   $('#ab ul').empty();
-  console.log("here")
   $.ajax({
       url: '/authors',
       method: 'GET',
       data: '',
       success: function(authorsArr){
         var htmlString = '';
-        console.log('got here!', authorsArr)
         authorsArr.forEach(function(authorObj){
           htmlString += writeAuthor(authorObj);
-
         });
-        console.log('htmlString:',htmlString)
         $('#ab ul').html(htmlString);
       } //success function
   })
@@ -60,13 +56,15 @@ function indexAuthorsBooks(){
 
 
 function remove(event){
-  var doc=$(this).attr('data');
-  var collection=$(this).parents('ul:first').attr('data');
-  console.log('doc=',doc);
-  console.log('collection=',collection);
-  $.ajax({url: '/'+collection+'/'+doc+'/destroy',
+  event.preventDefault();
+  console.log('#this',$(this))
+
+  $.ajax({url: $(this).attr('formaction'),
           method: 'POST',
           success: indexAuthorsBooks,
+        })
+        .fail(function(dta){
+          console.log("Fail?!",dta)
         });
 }
 function addAuthor(event){

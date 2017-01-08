@@ -40,9 +40,15 @@ var AuthorsController = {
             res.status(500).json(err);
         });
     },
-    delete: function(req, req){
-      console.log("delete request received")
-    }
+    delete: function(req, res){
+      Author.findByIdAndRemove({_id: req.params.id})
+        .then(function(){
+          res.json({success: true});
+        })
+        .catch(function(err){
+          res.status(500).json(err);
+        })
+    },
 }
 
 var BooksController = {
@@ -64,7 +70,16 @@ var BooksController = {
         .catch(function(err){
             res.status(500).json(err);
         });
-    }
+    },
+    delete: function(req, res){
+      Book.findByIdAndRemove({_id: req.params.id})
+        .then(function(){
+          res.json({success: true});
+        })
+        .catch(function(err){
+          res.status(500).json(err);
+        })
+    },
 }
 
 
