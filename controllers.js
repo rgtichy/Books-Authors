@@ -2,6 +2,9 @@ var { Book, Author } = require('./models');
 
 var AuthorsController = {
     create: function(req,res){
+      console.log('req~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=')
+      console.log(req)
+      console.log('req.body~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=')
       console.log("req.body:",req.body)
     // console.log(req.body);
       if (req.body.lastName){
@@ -14,6 +17,10 @@ var AuthorsController = {
                 res.status(500);
                 res.json(error);
         });
+      }
+      else{
+        res.status(500);
+        res.json();
       }
     },
     index: function(req,res){

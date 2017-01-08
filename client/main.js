@@ -49,11 +49,20 @@ function addAuthor(event){
   //         dataType: 'json',
   //         success: indexAuthorsBooks,
   //       });
-  $.post({
-          url: '/authors',
-          data: dataObject,
-          success: function(data){console.log("Success? ",data)}
-  })
+  $.ajax({url: '/authors',
+          method: 'POST',
+          data: JSON.stringify(dataObject),
+          success: indexAuthorsBooks,
+        });
+  // $.post({
+  //         url: '/authors',
+  //         data: dataObject,
+  //         success: function(data){console.log("Success? ",data)}
+  // })
+  // $.post('/authors',
+  //         JSON.stringify(dataObject),
+  //         function(data,error){console.log("Success? ",data,error)}
+  //       );
 }
 $(document).ready(function(){
     console.log('jQuery running');
