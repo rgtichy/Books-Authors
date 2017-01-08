@@ -2,13 +2,10 @@ var { Book, Author } = require('./models');
 
 var AuthorsController = {
     create: function(req,res){
-      console.log('req~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=')
-      console.log(req)
       console.log('req.body~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=')
       console.log("req.body:",req.body)
     // console.log(req.body);
       if (req.body.lastName){
-        console.log("lastName=",req.body.lastName)
         Author.create(req.body)
             .then(function(newAuthor){
                 res.json(newAuthor);

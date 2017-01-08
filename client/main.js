@@ -1,27 +1,64 @@
 function addBook(form){
   console.log(form)
 }
-function indexAuthorsBooks(authorsArr){
-  console.log("after add authors")
-  console.log(authorsArr)
-  $('ul#ab').empty();
-  var htmlString = '';
-  authorsArr.forEach(function(authorObj){
-      htmlString += `<li><button data='${authorObj._id}' class='btnE btn btn-xs btn-primary'>Edit</button>${authorObj.lastName}, ${authorObj.firstName}`;
-      htmlString += `<button data='${authorObj._id}' class='btnA btn btn-xs btn-primary'>Add Book</button>`
-      if (authorObj.books.length > 0){
-          htmlString += "<ul data='books'>";
-          authorObj.books.forEach(function(bookObj){
-              htmlString += `<li><button data='${bookObj._id}' class='btnE btn btn-xs btn-primary'>Edit</button>${bookObj.title}<button data='${bookObj._id}' class='btnD btn btn-xs btn-danger'>Remove</button></li>`
-          });
-          htmlString += "</ul>";
-      }
-      else{
-        htmlString += `<button data='${authorObj._id}' class='btnD btn btn-xs btn-danger'>Remove</button>`;
-      }
+function indexAuthorsBooks(){
+  function writeAuthor(authorObj){
+    var htmlString='';
+    htmlString += `<li>
+                    <button formaction="/authors/${authorObj._id}/show" data='${authorObj._id}' class='btnE btn btn-xs btn-primary'>
+                      Edit
+                    </button>
+                      ${authorObj.lastName}, ${authorObj.firstName}`;
+    htmlString += `<button formaction="/authors/${authorObj._id}/addBook" data='${authorObj._id}' class='btnA btn btn-xs btn-primary'>
+                    Add Book
+                  </button>`;
+    if (authorObj.books.length > 0){
+        htmlString += "<ul data='books'>";
+        authorObj.books.forEach(function(bookObj){
+            htmlString += `<li>
+                              <button formaction="/books/${bookObj._id}/show" data='${bookObj._id}' class='btnE btn btn-xs btn-primary'>
+                                Edit
+                              </button>
+                              ${bookObj.title}
+                              <button formaction="/books/${bookObj._id}/destroy" data='${bookObj._id}' class='btnD btn btn-xs btn-danger'>
+                                Remove
+                              </button>
+                           </li>`
+        });
+        htmlString += "</ul>";
+    } //books.length>0
+    else{
+      htmlString += `<button formaction='/authors/${authorObj._id}/destroy' data='${authorObj._id}' class='btnD btn btn-xs btn-danger'>
+                       Remove
+                     </button>`;
+    }
+    htmlString +='</li>';
+    return htmlString;
+  }
+  console.log("re-fill authors/books")
+  $('#ab ul').empty();
+  console.log("here")
+  $.ajax({
+      url: '/authors',
+      method: 'GET',
+      data: '',
+      success: function(authorsArr){
+        var htmlString = '';
+        console.log('got here!', authorsArr)
+        authorsArr.forEach(function(authorObj){
+          htmlString += writeAuthor(authorObj);
+
+        });
+        console.log('htmlString:',htmlString)
+        $('#ab ul').html(htmlString);
+      } //success function
+  })
+  .fail(function(data){
+    console.log("Fail!? :",data)
   });
-  $('ul').html(htmlString);
 }
+
+
 function remove(event){
   var doc=$(this).attr('data');
   var collection=$(this).parents('ul:first').attr('data');
@@ -33,36 +70,17 @@ function remove(event){
         });
 }
 function addAuthor(event){
-  console.log("Add Author")
-  console.log($(this));
+
   event.preventDefault();
-  var serialize=$(this).serialize();
-  console.log("S#:",serialize)
   var dataObject={firstName: $('input[name="firstName"]').val(),
          lastName: $('input[name="lastName"]').val(),
          birthYear: $('input[name="birth"]').val()};
-  console.log("dO#:",dataObject)
 
-  // $.ajax({url: '/authors',
-  //         method: 'POST',
-  //         data: { body: dataObject},
-  //         dataType: 'json',
-  //         success: indexAuthorsBooks,
-  //       });
   $.ajax({url: '/authors',
           method: 'POST',
-          data: JSON.stringify(dataObject),
+          data: dataObject,
           success: indexAuthorsBooks,
-        });
-  // $.post({
-  //         url: '/authors',
-  //         data: dataObject,
-  //         success: function(data){console.log("Success? ",data)}
-  // })
-  // $.post('/authors',
-  //         JSON.stringify(dataObject),
-  //         function(data,error){console.log("Success? ",data,error)}
-  //       );
+  });
 }
 $(document).ready(function(){
     console.log('jQuery running');
@@ -75,26 +93,5 @@ $(document).ready(function(){
     $('#ab').on('mouseenter mouseleave','li',function(){
       $(this).children('.btnE,.btnA').toggle();
     });
-    $.ajax({
-        url: '/authors',
-        method: 'GET',
-        success: function(authorsArr){
-            var htmlString = '';
-            authorsArr.forEach(function(authorObj){
-                htmlString += `<li><button data='${authorObj._id}' class='btnE btn btn-xs btn-primary'>Edit</button>${authorObj.lastName}, ${authorObj.firstName}`;
-                htmlString += `<button data='${authorObj._id}' class='btnA btn btn-xs btn-primary'>Add Book</button>`
-                if (authorObj.books.length > 0){
-                    htmlString += "<ul data='books'>";
-                    authorObj.books.forEach(function(bookObj){
-                        htmlString += `<li><button data='${bookObj._id}' class='btnE btn btn-xs btn-primary'>Edit</button>${bookObj.title}<button data='${bookObj._id}' class='btnD btn btn-xs btn-danger'>Remove</button></li>`
-                    });
-                    htmlString += "</ul>";
-                }
-                else{
-                  htmlString += `<button data='${authorObj._id}' class='btnD btn btn-xs btn-danger'>Remove</button>`;
-                }
-            });
-            $('ul').html(htmlString)
-        }
-    });
+    indexAuthorsBooks();
 });
