@@ -100,7 +100,7 @@ function addBook(event){
 function indexAuthorsBooks(){
   function writeAuthor(authorObj){
     var htmlString='';
-    htmlString += `<li id=${authorObj._id}>
+    htmlString += `<li id=${authorObj._id} class='author'>
                     <button formaction="/authors/${authorObj._id}/show" class='btnE btn btn-xs btn-primary'>
                       Edit
                     </button>
@@ -111,11 +111,11 @@ function indexAuthorsBooks(){
     if (authorObj.books.length > 0){
         htmlString += "<ul data='books'>";
         authorObj.books.forEach(function(bookObj){
-            htmlString += `<li>
+            htmlString += `<li class='book'>
                               <button formaction="/books/${bookObj._id}/show" class='btnE btn btn-xs btn-primary'>
                                 Edit
                               </button>
-                              ${bookObj.title}
+                              ${bookObj.title} (${bookObj.publishDate})
                               <button formaction="/books/${bookObj._id}/destroy" class='btnD btn btn-xs btn-danger'>
                                 Remove
                               </button>

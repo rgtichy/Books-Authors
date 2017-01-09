@@ -6,4 +6,7 @@
   width: 80%;
   overflow-y: scroll;
 }
+.book {
+  color: #66C;
+}
 button {margin-left: .5rem;}
