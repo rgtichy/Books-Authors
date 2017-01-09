@@ -1,31 +1,31 @@
-function resetFormAddBook(){
-  $('#addBookDiv').find('span').remove('.author');
-  $('#addBookDiv').find('input').remove('.author');
-  clearForm('#addBookDiv');
+function resetDivForm(selectorDiv,selectorForm,selectorElement){
+  // $(selectorDiv).find('span').remove(selectorElement);
+  // $(selectorDiv).find('input').remove(selectorElement);
+  $(selectorDiv).find('*').remove(selectorElement);
+  clearForm(selectorForm);
 }
 function clearForm(selector){
   $(selector).find('input').val("");
   $(selector).find('textarea').val("");
 }
 function displayEditAuthor(authorObj){
-  $('#addAuthor').find('input').remove('.author');
-  clearForm('#addAuthor');
+
   console.log('author',authorObj)
-  $('#addA').css('display','none');
-  $('#editA').css('display','none');
+
+  // load values to form
   $('#addAuthor').prepend(`<input class='author' name='authorId' type='hidden' value='${authorObj._id}'/>`)
   $('#addAuthor').find('input[name="firstName"]').val(authorObj.firstName);
   $('#addAuthor').find('input[name="lastName"]').val(authorObj.lastName);
   $('#addAuthor').find('input[name="birthYear"]').val(authorObj.birthYear);
-  $('#editA').toggle();
+  // toggle on the edit button
+  $('#addA').hide();
+  $('#editA').show();
 }
 function displayEditBook(bookObj){
   console.log('bookObj',bookObj)
-  $('#editBookDiv').find('span').remove('.author');
-  $('#editBookDiv').find('input').remove('.author');
-
-  $('#editBookDiv').css('display','none');
-  $('#editBookDiv').toggle();
+  //
+  $('#editBookDiv').show();
+  // load values into the form
   $('#editBook').attr('action',`/books/${bookObj._id}/update`)
   $('#editBook').children('.form-group').prepend(`<span class='author'><b>Author:</b> ${bookObj.author.lastName},${bookObj.author.firstName}</span>`);
   $('#editBook').find('input[name="title"]').val(bookObj.title);
@@ -39,12 +39,13 @@ function editBook(event){
     publishDate: $(this).find('input[name="year"]').val(),
     publisher: $(this).find('input[name="pub"]').val(),
   }
+  // the book._id is already loaded in the action
   $.ajax({url: $(this).attr('action'),
           method: 'POST',
           data: dataObject,
           success: function(data){
-            // resetFormAddBook();
-            $('#editBookDiv').css('display', 'none');
+            resetDivForm('#editBookDiv','#editBook','.author'); //div,form,element-selector
+            $('#editBookDiv').hide();
             indexAuthorsBooks();},
         })
         .fail(function(data){
@@ -57,9 +58,11 @@ function displayEdit(button){
           success: function(returnObj){
 
             if (returnObj.firstName){
+              resetDivForm('#addAuthor','#addAuthor','.author'); //div,form,element-selector
               displayEditAuthor(returnObj);
             }
             else{
+              resetDivForm('#editBookDiv','#editBook','.author'); //div,form,element-selector
               displayEditBook(returnObj);
             }
           },
@@ -69,13 +72,12 @@ function displayEdit(button){
   });
 }
 function displayAddBook(button){
-
-  resetFormAddBook();
-
+  // clear the form inputs and remove any ".author" classed-elements
+  resetDivForm('#addBookDiv','#addBook','.author'); //div,form,element-selector
+  //insert the author info into the form,div-space
   $('#addBookDiv').children('form').prepend(`<span class='author' data='${$(this).attr('data')}'><b>Author:</b> ${$(this).attr('data2')}</span>`);
   $('#addBookDiv').children('form').prepend(`<input class='author' name='authorId' type='hidden' value='${$(this).attr('data')}'/>`);
-  $('#addBookDiv').css('display', 'none');
-  $('#addBookDiv').toggle();
+  $('#addBookDiv').show();
 }
 function addBook(event){
   event.preventDefault();
@@ -89,8 +91,8 @@ function addBook(event){
           method: 'POST',
           data: dataObject,
           success: function(data){
-            resetFormAddBook();
-            $('#addBookDiv').css('display', 'none');
+            resetDivForm('#addBookDiv','#addBook','.author'); //div,form,element-selector
+            $('#addBookDiv').hide();
             indexAuthorsBooks();},
         })
         .fail(function(data){
@@ -157,11 +159,11 @@ function remove(event){
           method: 'POST',
           success: indexAuthorsBooks,
         })
-        .fail(function(dta){
-          console.log("Fail?!",dta)
+        .fail(function(data){
+          console.log("Fail?!",data)
   });
 }
-function addAuthor(event){
+function formAuthor(event){
 
   event.preventDefault();
   var dataObject={firstName: $('input[name="firstName"]').val(),
@@ -201,24 +203,30 @@ $(document).ready(function(){
     console.log('jQuery running');
 
     $('#addBook').on('submit', addBook);
-    $('#editBook').on('submit', editBook);
-    $('#editBook').on('click','.cancel',function(){
-      // clear form #editBook
-      $('#editBookDiv').remove('.author');
-      clearForm('#editBook');
-      // hide form #editBook
-      $('#editBookDiv').css('display','none');
+    $('#addBook').on('click','.cancel',function(){
+      resetDivForm('#addBookDiv','#addBook','.author'); //div,form,element-selector
+      $('#addBookDiv').hide();
     });
 
-    $('#addAuthor').submit(addAuthor);
+    $('#editBook').on('submit', editBook);
+    $('#editBook').on('click','.cancel',function(){
+      resetDivForm('#editBookDiv','#editBook','.author'); //div,form,element-selector
+      $('#editBookDiv').hide();
+    });
+
+    $('#addAuthor').submit(formAuthor);
+    $('#addAuthor').on('click','.cancel',function(){
+      resetDivForm('#addAuthor','#addAuthor','.author'); //div,form,element-selector
+    });
+
     $('#ab').on('click','.btnD', remove);
     $('#ab').on('click','.btnA', displayAddBook);
     $('#ab').on('click','.btnE', displayEdit);
-    $('#ab').on('mouseenter mouseleave','li',function(){
-      $(this).children('.btnD').toggle();
+    $('#ab').on('mouseenter','li',function(){
+      $(this).children('.btnD,.btnE,.btnA').show();
     });
-    $('#ab').on('mouseenter mouseleave','li',function(){
-      $(this).children('.btnE,.btnA').toggle();
+    $('#ab').on('mouseleave','li',function(){
+      $(this).children('.btnD,.btnE,.btnA').hide();
     });
     indexAuthorsBooks();
 });

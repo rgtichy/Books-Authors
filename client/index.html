@@ -22,6 +22,7 @@
                 <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
                 <label class='col-md-1'>Publisher</label><input class='col-md-2' placeholder='Publisher' type='text' name='pub'/>
                 <button class='col-md-1 btn btn-success' type='submit'>Add Book</button>
+                <button class='cancel col-md-1 btn btn-primary' type='button'>Cancel</button>
               </div>
             </div>
           </form>
@@ -48,11 +49,13 @@
           <hr />
           <form id='addAuthor' action='/authors' method='POST'>
             <div class='form-group'>
-              <label class='text-right col-md-2'>First Name:</label><input name='firstName' placeholder='William' class='col-md-2' type='text'/>
-              <label class='text-right col-md-2'>Last Name:</label><input name='lastName' placeholder='Shakespeare' class='col-md-2' type='text'/>
+              <label class='col-md-1'>Name:</label>
+              <label class='text-right col-md-1'>First</label><input name='firstName' placeholder='William' class='col-md-2' type='text'/>
+              <label class='text-right col-md-1'>Last</label><input name='lastName' placeholder='Shakespeare' class='col-md-2' type='text'/>
               <label class='text-right col-md-1'>Birth:</label><input name='birthYear' placeholder='Year' class='col-md-1' type='number'/>
               <button id='addA' type='submit' class='btn btn-primary col-md-1'>Add Author</button>
               <button id='editA' type='submit' class='btn btn-primary col-md-1'>Update</button>
+              <button class='cancel col-md-1 btn btn-primary' type='button'>Cancel</button>
             </div>
           </form>
         </div>
