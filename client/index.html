@@ -12,7 +12,7 @@
     <body>
       <div class='container'>
         <div class='row'>
-          <h1 class='col-md-8'>Authors/Books!</h1>
+          <h1 class='col-md-8'>Authors/Works</h1>
         </div>
         <div id='addBookDiv' style='display:none;'>
           <form id='addBook' action='/books'>
@@ -20,8 +20,21 @@
               <div class='row'>
                 <label class='col-md-1'>Title</label><input class='col-md-3' placeholder='Book Title' type='text' name='title'/>
                 <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
-                <label class='col-md-1'>Publisher</label><input class='col-md-3' placeholder='Publisher' type='text' name='pub'/>
+                <label class='col-md-1'>Publisher</label><input class='col-md-2' placeholder='Publisher' type='text' name='pub'/>
                 <button class='col-md-1 btn btn-success' type='submit'>Add Book</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div id='editBookDiv' style='display:none;'>
+          <form id='editBook' action='/books/:id/update'>
+            <div class='form-group'>
+              <div class='row'>
+                <label class='col-md-1'>Title</label><input class='col-md-3' placeholder='Book Title' type='text' name='title'/>
+                <label class='col-md-1'>Pub. Year</label><input class='col-md-1' placeholder='Year Published' type='number' name='year'/>
+                <label class='col-md-1'>Publisher</label><input class='col-md-2' placeholder='Publisher' type='text' name='pub'/>
+                <button class='col-md-1 btn btn-success' type='submit'>Update Book</button>
+                <button class='cancel col-md-1 btn btn-primary' type='button'>Cancel</button>
               </div>
             </div>
           </form>

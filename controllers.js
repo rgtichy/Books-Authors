@@ -81,6 +81,28 @@ var BooksController = {
             res.status(500).json(err);
         });
     },
+    show: function(req, res){
+        Book.findById(req.params.id)
+        .populate('author')
+        .exec()
+        .then(function(book){
+            res.json(book);
+        })
+        .catch(function(err){
+            res.status(500).json(err);
+        });
+    },
+    update: function(req, res){
+      console.log('id--->',req.params.id)
+      console.log('r.b-->',req.body)
+        Book.update({ _id: req.params.id }, req.body)
+        .then(function(){
+            res.json({success: true});
+        })
+        .catch(function(err){
+            res.status(500).json(err);
+        });
+    },
     delete: function(req, res){
       Book.findByIdAndRemove({_id: req.params.id})
         .then(function(){

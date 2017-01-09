@@ -7,7 +7,7 @@ mongoose.connection.on('connected', function(){
 
 var bookSchema = mongoose.Schema({
     title: { type: String, require: true },
-    publishDate: Date,
+    publishDate: Number,
     publisher: { type: String, require: false },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' }
 });
