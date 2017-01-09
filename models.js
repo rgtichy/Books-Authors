@@ -15,7 +15,7 @@ var bookSchema = mongoose.Schema({
 var authorSchema = mongoose.Schema({
     firstName: { type: String, require: true },
     lastName: { type: String, require: true },
-    birthDate: Date,
+    birthYear: Number,
     books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
 });
 

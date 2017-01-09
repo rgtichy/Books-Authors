@@ -7,8 +7,27 @@ function clearForm(selector){
   $(selector).find('input').val("");
   $(selector).find('textarea').val("");
 }
+function displayEditAuthor(button){
+  $.ajax({url: $(this).attr('formaction'),
+          method: 'GET',
+          success: function(authorObj){
+            $('#addAuthor').find('input').remove('.author');
+            clearForm('#addAuthor');
+            console.log(authorObj)
+            $('#addA').css('display','none');
+            $('#editA').css('display','none');
+            $('#addAuthor').prepend(`<input class='author' name='authorId' type='hidden' value='${authorObj._id}'/>`)
+            $('#addAuthor').find('input[name="firstName"]').val(authorObj.firstName);
+            $('#addAuthor').find('input[name="lastName"]').val(authorObj.lastName);
+            $('#addAuthor').find('input[name="birthYear"]').val(authorObj.birthYear);
+            $('#editA').toggle();
+          },
+        })
+        .fail(function(data){
+          console.log("Fail?!",data)
+  });
+}
 function displayAddBook(button){
-  console.log(button)
 
   resetFormAddBook();
 
@@ -45,7 +64,7 @@ function indexAuthorsBooks(){
                     <button formaction="/authors/${authorObj._id}/show" class='btnE btn btn-xs btn-primary'>
                       Edit
                     </button>
-                      ${authorObj.lastName}, ${authorObj.firstName}`;
+                      <b>${authorObj.lastName}, ${authorObj.firstName}</b>, b. ${authorObj.birthYear}`;
     htmlString += `<button formaction="/authors/${authorObj._id}/addBook" class='btnA btn btn-xs btn-primary' data='${authorObj._id}' data2='${authorObj.lastName}, ${authorObj.firstName}'>
                     Add Book
                   </button>`;
@@ -109,16 +128,39 @@ function addAuthor(event){
   event.preventDefault();
   var dataObject={firstName: $('input[name="firstName"]').val(),
          lastName: $('input[name="lastName"]').val(),
-         birthYear: $('input[name="birth"]').val()};
+         birthYear: $('input[name="birthYear"]').val()};
+  var aId=$(this).children('input[name="authorId"]').val();
+  console.log("aId:",aId)
+  if(aId !== undefined){
+    console.log("update, not add!")
+    dataObject['_id'] = aId;
+    console.log("dO",dataObject)
+    $.ajax({url: `/authors/${aId}/update`,
+            method: 'POST',
+            data: dataObject,
+            success: function(){
 
-  $.ajax({url: '/authors',
-          method: 'POST',
-          data: dataObject,
-          success: function(){
-            clearForm('#addAuthor')
-            indexAuthorsBooks();
-          },
-  });
+              $('#addAuthor').find('input').remove('.author');
+              clearForm('#addAuthor');
+
+              $('#addA').css('display','none');
+              $('#editA').css('display','none');
+              $('#addA').toggle();
+
+              indexAuthorsBooks();
+            },
+    });
+  }
+  else{
+    $.ajax({url: '/authors',
+            method: 'POST',
+            data: dataObject,
+            success: function(){
+              clearForm('#addAuthor')
+              indexAuthorsBooks();
+            },
+    });
+  }
 }
 $(document).ready(function(){
     console.log('jQuery running');
@@ -126,6 +168,7 @@ $(document).ready(function(){
     $('#addAuthor').submit(addAuthor);
     $('#ab').on('click','.btnD', remove);
     $('#ab').on('click','.btnA', displayAddBook);
+    $('#ab').on('click','.btnE', displayEditAuthor);
     $('#ab').on('mouseenter mouseleave','li',function(){
       $(this).children('.btnD').toggle();
     });

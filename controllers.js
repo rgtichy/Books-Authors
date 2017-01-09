@@ -2,9 +2,7 @@ var { Book, Author } = require('./models');
 
 var AuthorsController = {
     create: function(req,res){
-      console.log('req.body~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=')
-      console.log("req.body:",req.body)
-    // console.log(req.body);
+
       if (req.body.lastName){
         Author.create(req.body)
             .then(function(newAuthor){
@@ -32,9 +30,21 @@ var AuthorsController = {
             });
     },
     update: function(req, res){
+      console.log('id--->',req.params.id)
+      console.log('r.b-->',req.body)
         Author.update({ _id: req.params.id }, req.body)
         .then(function(){
             res.json({success: true});
+        })
+        .catch(function(err){
+            res.status(500).json(err);
+        });
+    },
+    show: function(req, res){
+        Author.findById(req.params.id)
+        .then(function(author){
+            console.log('author',author)
+            res.json(author);
         })
         .catch(function(err){
             res.status(500).json(err);
